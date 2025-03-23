@@ -20,6 +20,7 @@ exports.handler = async (event, context) => {
     };
 
     try {
+        console.log('메일 옵션:', mailOptions); // 메일 옵션 로그 출력
         await transporter.sendMail(mailOptions);
         console.log('이메일 전송 성공');
         return {
@@ -30,8 +31,9 @@ exports.handler = async (event, context) => {
         console.error('이메일 전송 실패:', error);
         return {
             statusCode: 500,
-            body: JSON.stringify({ message: '이메일 전송에 실패했습니다.', error: error.toString() })
+            body: JSON.stringify({ message: `이메일 전송에 실패했습니다: ${error.message}` })
         };
     }
 };
+
 

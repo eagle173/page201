@@ -52,7 +52,11 @@
                     body: JSON.stringify(data)
                 });
                 const result = await response.json();
-                alert(result.message);
+                if (response.ok) {
+                    alert(result.message);
+                } else {
+                    alert(`이메일 전송에 실패했습니다: ${result.message}`);
+                }
             } catch (error) {
                 console.error('이메일 전송 실패:', error);
                 alert('이메일 전송에 실패했습니다.');

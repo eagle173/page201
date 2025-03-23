@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>양식 제출</title>
+</head>
+<body>
+    <form id="submissionForm">
+        <label for="name">이름:</label>
+        <input type="text" id="name" name="name" required><br><br>
+
+        <label for="email">이메일:</label>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <label for="orderNumber">주문번호:</label>
+        <input type="text" id="orderNumber" name="orderNumber" required><br><br>
+
+        <label for="comboBox">항목 선택:</label>
+        <select id="comboBox" name="comboBox">
+            <option value="">선택하세요</option>
+            <option value="영혼각차">영혼각차</option>
+            <option value="초도">초도</option>
+            <option value="돈보내기">돈보내기</option>
+            <option value="법회">법회</option>
+            <option value="법사">법사</option>
+            <option value="실물">실물</option>
+        </select><br><br>
+
+        <div id="additionalFields"></div>
+
+        <button type="submit">제출</button>
+    </form>
+
+    <script>
+        document.getElementById('submissionForm').addEventListener('submit', async function(event) {
+            event.preventDefault(); // 폼 제출 기본 동작 방지
+
+            const formData = new FormData(this);
+            const emailContent = Array.from(formData.entries()).map(entry => `${entry[0]}: ${entry[1]}`).join('\n');
+
+            const data = {
+                email: formData.get('email'),
+                name: formData.get('name'),
+                subject: "양식 제출",
+                message: emailContent
+            };
+
+            try {
+                const response = await fetch('/.netlify/functions/send-email', {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                alert(result.message);
+            } catch (error) {
+                console.error('이메일 전송 실패:', error);
+                alert('이메일 전송에 실패했습니다.');
+            }
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>
